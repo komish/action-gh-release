@@ -14,7 +14,6 @@ jobs:
 
         steps:
             - name: Delete previous release and tag
-              if: ${{ steps.create-tarfile.outcome == 'success' }}
               uses: dev-drprasad/delete-tag-and-release@v0.2.1
               with:
                 delete_release: true # default: false
@@ -24,12 +23,10 @@ jobs:
 
             - name: Create the release
               id: create_release
-              if: ${{ always() && steps.create-tarfile.outcome == 'success' }}
               uses: komish/action-gh-release@consolelogging
               with:
                 tag_name: ${{ env.DEV_RELEASE }}
                 body: "Development release created with each merge into the main branch."
-                files: ${{ steps.create-tarfile.outputs.tarball_full_name }}
                 prerelease: true
                 draft: false
               env:
