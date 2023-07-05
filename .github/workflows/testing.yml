@@ -6,8 +6,8 @@ on:
             - '*'
 
 jobs:
-    build:
-        name: Create Dev Release
+    delete-old:
+        name: Delete Prior Dev Release
         runs-on: ubuntu-latest
         env:
             DEV_RELEASE: 0.1.0
@@ -22,15 +22,16 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Sleep
-              # Sleep shortly to prevent the release creation from racing
-              # against the release deletion in the previous step.
-              id: sleep
-              run: sleep 5
-
+    create-new:
+        name: Recreate Dev Release
+        runs-on: ubuntu-latest
+        env:
+            DEV_RELEASE: 0.1.0
+        permissions:
+          contents: write
             - name: Create the release
               id: create_release
-              if: steps.sleep.outcome
+              # if: steps.sleep.outcome
               uses: komish/action-gh-release@consolelogging
               with:
                 tag_name: ${{ env.DEV_RELEASE }}
