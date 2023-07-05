@@ -22,13 +22,19 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            # - name: Create the release
-            #   id: create_release
-            #   uses: komish/action-gh-release@consolelogging
-            #   with:
-            #     tag_name: ${{ env.DEV_RELEASE }}
-            #     body: "Development release created with each merge into the main branch."
-            #     prerelease: true
-            #     draft: false
-            #   env:
-            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Sleep
+              # Sleep shortly to prevent the release creation from racing
+              # against the release deletion in the previous step.
+              id: sleep
+              run: sleep 5
+
+            - name: Create the release
+              id: create_release
+              uses: komish/action-gh-release@consolelogging
+              with:
+                tag_name: ${{ env.DEV_RELEASE }}
+                body: "Development release created with each merge into the main branch."
+                prerelease: true
+                draft: false
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
