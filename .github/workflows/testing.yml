@@ -23,6 +23,8 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     create-new:
+        needs: 
+        - delete-old
         name: Recreate Dev Release
         runs-on: ubuntu-latest
         env:
