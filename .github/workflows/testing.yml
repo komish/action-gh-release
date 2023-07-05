@@ -11,7 +11,8 @@ jobs:
         runs-on: ubuntu-latest
         env:
             DEV_RELEASE: 0.1.0
-
+        permissions:
+          contents: write
         steps:
             - name: Delete previous release and tag
               uses: dev-drprasad/delete-tag-and-release@v0.2.1
