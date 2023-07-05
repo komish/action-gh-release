@@ -1,0 +1,36 @@
+name: Test Changes
+
+on:
+    push:
+        branches:
+            - *
+
+jobs:
+    build:
+        name: Create Dev Release
+        runs-on: ubuntu-latest
+        env:
+            DEV_RELEASE: 0.1.0
+
+        steps:
+            - name: Delete previous release and tag
+              if: ${{ steps.create-tarfile.outcome == 'success' }}
+              uses: dev-drprasad/delete-tag-and-release@v0.2.1
+              with:
+                delete_release: true # default: false
+                tag_name: ${{ env.DEV_RELEASE }} # tag name to delete
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Create the release
+              id: create_release
+              if: ${{ always() && steps.create-tarfile.outcome == 'success' }}
+              uses: softprops/action-gh-release@v1
+              with:
+                tag_name: ${{ env.DEV_RELEASE }}
+                body: "Development release created with each merge into the main branch."
+                files: ${{ steps.create-tarfile.outputs.tarball_full_name }}
+                prerelease: true
+                draft: false
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

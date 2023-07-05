@@ -285,6 +285,9 @@ export const release = async (
       console.log(
         `👩‍🏭 Creating new GitHub release for tag ${tag_name}${commitMessage}...`
       );
+      console.log(
+        `input_draft(${config.input_draft}) - draft(${draft} - input_prerelease(${config.input_prerelease}) - prerelease(${prerelease}))`
+      )
       try {
         let release = await releaser.createRelease({
           owner,
